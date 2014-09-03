@@ -381,6 +381,37 @@
     [self selectPickerValue:dataToSelect pickerType:KIFUIPickerView];
 }
 
+- (void)selectPickerViewRowWithTitle:(NSString *)title inComponent:(NSInteger)component
+{
+    NSMutableArray *dataToSelect = [[NSMutableArray alloc] init];
+    
+    // Assume it is datePicker and then test our hypothesis later!
+    UIPickerView *pickerView = [[[[UIApplication sharedApplication] datePickerWindow] subviewsWithClassNameOrSuperClassNamePrefix:@"UIPickerView"] lastObject];
+    
+    // Check which type of UIPickerVIew it is!
+    KIFPickerType pickerType = 0;
+    if ([pickerView respondsToSelector:@selector(setDate:animated:)]) {
+        pickerType = KIFUIDatePicker;
+    }
+    else {
+        pickerType = KIFUIPickerView;
+        pickerView = [[[[UIApplication sharedApplication] pickerViewWindow] subviewsWithClassNameOrSuperClassNamePrefix:@"UIPickerView"] lastObject];
+    }
+    
+    // Add title at component index and add empty strings for other.
+    // This support legacy function re-use.
+    for (int i = 0; i < pickerView.numberOfComponents; i++) {
+        if (component == i) {
+            [dataToSelect addObject:title];
+        }
+        else {
+            [dataToSelect addObject:@""];
+        }
+    }
+    
+    [self selectPickerValue:dataToSelect pickerType:pickerType];
+}
+
 - (void) selectPickerValue:(NSArray*)pickerColumnValues pickerType:(KIFPickerType)pickerType {
 
     [self runBlock:^KIFTestStepResult(NSError **error) {
@@ -439,16 +470,22 @@
             if (found_values[componentIndex] == [NSNumber numberWithBool:YES]) {
                 continue;
             }
-
         }
-
+        
+        // Support multiple column by adding flag to check if the value found in
+        // at-least one column
+        BOOL _foundInOneColumn = NO;
         for (NSInteger componentIndex = 0; componentIndex < columnCount; componentIndex++) {
-            if (found_values[componentIndex] == [NSNumber numberWithBool:NO]) {
-                KIFTestCondition(NO, error, @"Failed to select from Picker.");
-                return KIFTestStepResultFailure;
+            if (found_values[componentIndex] != [NSNumber numberWithBool:NO]) {
+                _foundInOneColumn = YES;
             }
         }
-
+        
+        if (!_foundInOneColumn) {
+            KIFTestCondition(NO, error, @"Failed to select from Picker.");
+            return KIFTestStepResultFailure;
+        }
+        
         return KIFTestStepResultSuccess;
     }];
 
