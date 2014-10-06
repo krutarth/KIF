@@ -388,7 +388,7 @@
     // Assume it is datePicker and then test our hypothesis later!
     UIPickerView *pickerView = [[[[UIApplication sharedApplication] datePickerWindow] subviewsWithClassNameOrSuperClassNamePrefix:@"UIPickerView"] lastObject];
     
-    // Check which type of UIPickerVIew it is!
+    // Check which type of UIPickerVIew is currently visible.
     KIFPickerType pickerType = 0;
     if ([pickerView respondsToSelector:@selector(setDate:animated:)]) {
         pickerType = KIFUIDatePicker;
