@@ -263,7 +263,6 @@
 {
     for (NSUInteger characterIndex = 0; characterIndex < [text length]; characterIndex++) {
         NSString *characterString = [text substringWithRange:NSMakeRange(characterIndex, 1)];
-        
         if (![KIFTypist enterCharacter:characterString]) {
             // Attempt to cheat if we couldn't find the character
             if (!fallbackView) {

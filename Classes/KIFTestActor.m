@@ -28,17 +28,17 @@
         NSLog(@"KIFTester loaded");
         [KIFTestActor _enableAccessibility];
 
-#ifndef KIF_SENTEST
-        if ([[[NSProcessInfo processInfo] environment] objectForKey:@"StartKIFManually"]) {
-            [[NSUserDefaults standardUserDefaults] setBool:YES forKey:XCTestToolKey];
-            XCTSelfTestMain();
-        }
-#else
-        if ([[[NSProcessInfo processInfo] environment] objectForKey:@"StartKIFManually"]) {
-            [[NSUserDefaults standardUserDefaults] setBool:YES forKey:SenTestToolKey];
-            SenSelfTestMain();
-        }
-#endif
+//#ifndef KIF_SENTEST
+//        if ([[[NSProcessInfo processInfo] environment] objectForKey:@"StartKIFManually"]) {
+//            [[NSUserDefaults standardUserDefaults] setBool:YES forKey:XCTestToolKey];
+//            XCTSelfTestMain();
+//        }
+//#else
+//        if ([[[NSProcessInfo processInfo] environment] objectForKey:@"StartKIFManually"]) {
+//            [[NSUserDefaults standardUserDefaults] setBool:YES forKey:SenTestToolKey];
+//            SenSelfTestMain();
+//        }
+//#endif
 
         [UIApplication swizzleRunLoop];
     }
